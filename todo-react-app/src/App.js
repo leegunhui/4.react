@@ -30,6 +30,20 @@ function App() {
     setItems(prev => [...prev, newItem])
     console.log("items : ",[...items,newItem]);
   }
+
+  //삭제를 해주는 deleteItem()함수 만들기
+  //delete from 테이블 where id="";
+  const deleteItem = (item) => {
+    //배열에서 삭제하려고 하는 아이템을 찾는다
+    const newItems = items.filter(e => e.id !== item.id);
+    //삭제할 아이템을 제외한 아이템을 다시 배열에 지정한다.
+    setItems([...newItems]);
+  }
+
+  const editItem = () => {
+    setItems([...items]); // -> 얘가 쟤 렌더링 해줌
+  }
+
     //react는 key속성에 들어있는 값을 참고해서, 리스트의 요소가 변경될 경우
     //어떤 요소가 변경되었는지 빠르게 파악할 수 있다.
     const todoItems = items.length > 0 && 
@@ -40,7 +54,7 @@ function App() {
       <Paper style={{margin: 16}}>
          <List>{/*일련의 항목을 세로로 나열하는 컨테이너 역할 */}
           {items.map((item) => (
-            <Todo item={item} key={item.id} />
+            <Todo item={item} key={item.id} deleteItem={deleteItem} editItem={editItem}/>
           ))}
         </List>
       </Paper>
@@ -63,3 +77,6 @@ export default App;
 //다양한 내용의 할일을 추가하는것
 //임의의 Todo리스트는 각 Todo마다 다른 내용을 갖고있어야한다.
 //이 요구사항을 충족하기 위해 Todo컴포넌트에 title을 매개변수로 넘기자
+
+//useState(), 기능을 하는 함수를 App.js에 만든이유
+//전체 Todo리스트는 App.js에서 관리를 하기 때문에
