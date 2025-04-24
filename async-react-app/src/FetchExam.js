@@ -6,13 +6,16 @@ const FetchExam = () => {
     const [error, setError] = useState(null);      // 에러 상태 관리
 
     useEffect(() => {
-        // 비동기적으로 데이터 호출
+        //비동기적으로 데이터 호출
         const fetchData = async () => {
             try {
                 const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+
+                //통신이 잘 됐는지 안됐는지의 결과에 따라서 처리
                 if (!response.ok) {
                     throw new Error('데이터를 불러오는데 실패했습니다.');
                 }
+                //100개의 게시물 데이터가 data로 들어가게 된다
                 const data = await response.json();
                 setPosts(data);  // 상태에 데이터를 저장
             } catch (err) {
