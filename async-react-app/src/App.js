@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import { Sync } from './Sync';
-
+import { Sync , Async  } from './Sync';
+import { Fetch,Axios } from './Async';
 function App() {
   return (
     <div className="App">
-      <Sync />
+      <Axios />
     </div>
   );
 }
