@@ -1,5 +1,5 @@
-import { GrandChild } from "./grandchild"
+import { GrandChild } from "./gc"
 
 export const Child = () => {
-    return <GrandChild/>
+    return <GrandChild />
 }

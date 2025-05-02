@@ -1,7 +1,0 @@
-export const GrandChild = () => {
-    return(
-        <div>
-            {value}
-        </div>
-    )
-}
