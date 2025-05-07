@@ -32,11 +32,12 @@ let Todo = (props) => {
         setReadOnly(false);
     }
 
-    const turnOnReadOnly = (e) => {
-        if(e.key == 'Enter'){
-            setReadOnly(true);
+    const turnOnReadOnly = (e) =>{
+        if(e.key === 'Enter' && readOnly === false){
+           setReadOnly(true);
+           editItem(item);
         }
-    }
+     }
 
     // //변경을 감지하는 함수
     // const handleChange = (e) => {
@@ -47,15 +48,15 @@ let Todo = (props) => {
     // }
 
     const editEventHandler = (e) => {
-        item.title = e.target.value
-        editItem();
+        setItem({...item,title:e.target.value});//변경만 해서는 렌더링이 안된다.
     }
     
     //체크박스 변경함수
-    const checkBoxEventHandler = (e) => {
+    const checkBoxEventHandler = (e) =>{
         item.done = e.target.checked;
-        editItem();
-    }
+        editItem(item);//App.js의 editItem의 매개변수에 전달된다.
+     }
+
     //삭제함수
     const deleteItem = props.deleteItem;
 

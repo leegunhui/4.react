@@ -1,48 +1,52 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import logo from './logo.svg';
-import './App.css';
 import Todo from './Todo';
 import AddTodo from './AddTodo';
 import {Container, List, Paper} from '@mui/material'
+import axios from 'axios'
+import {call} from './service/ApiService'
 
 //Container
 //레이아웃의 가로 폭을 제한하고, 중앙 정렬 및 기본 패딩을 자동으로 적용해주는 컴포넌트
 
 //주요 props
 //maxWidth : 최대 너비를 지정(xs,sm,md,lg,xl,false)
+//fixed : maxWidth와 관계없이 항상 고정폭 적용
+
 
 function App() {
 
   //하나의 할 일을 객체로 관리할 것이다.
-  //id, title, done
+  //{id, title, done}
   const [items, setItems] = useState([])
-  //Todo를 추가하기 위한 백엔드 콜을 대신할 가짜함수를 만들어보자
-  const add = (item) =>{
-    //newItem 객체가 하나의 Todo
-    const newItem = {
-      ...item,
-      id: "ID-" + items.length,
-      done:false,
-    }
 
-    //상태를 변화시키는 함수를 호출하면 state의 변경사항이 화면에 적용이 된다.
-    
-    setItems(prev => [...prev, newItem])
-    console.log("items : ",[...items,newItem]);
+  //최초 렌더링시 1번만 실행
+  useEffect(() => {
+    //조회
+    call("/todo","GET")
+      .then(result => setItems(result.data))
+  },[]);
+
+  const add = (item) => {
+    //데이터베이스에 추가하기 위해 백엔드로 데이터를 전달
+    call("/todo","POST",item)
+    //데이터를 추가하고, 전체 데이터를 반환받아서 state에 세팅을 하여
+    //다시 렌더링이 일어남
+      .then(result => setItems(result.data))
   }
 
   //삭제를 해주는 deleteItem()함수 만들기
-  //delete from 테이블 where id="";
+  //delete from 테이블 where id=0;
   const deleteItem = (item) => {
-    //배열에서 삭제하려고 하는 아이템을 찾는다
-    const newItems = items.filter(e => e.id !== item.id);
-    //삭제할 아이템을 제외한 아이템을 다시 배열에 지정한다.
-    setItems([...newItems]);
+    call("/todo","DELETE",item)
+      .then(result => setItems(result.data))
   }
 
-  const editItem = () => {
-    setItems([...items]); // -> 얘가 쟤 렌더링 해줌
-  }
+
+  const editItem = (item) => {
+    call("/todo","PUT",item)
+    .then(result => setItems(result.data))
+ }
 
     //react는 key속성에 들어있는 값을 참고해서, 리스트의 요소가 변경될 경우
     //어떤 요소가 변경되었는지 빠르게 파악할 수 있다.
@@ -59,24 +63,15 @@ function App() {
         </List>
       </Paper>
 
-
-return (
-  <div className="App">
-    <Container maxWidth="md">
-      <AddTodo add={add}/> {/*AddTodo에 add함수를 전달*/}
-      <div className="TodoList">
+  return (
+    <div className="App">
+      <Container maxWidth="md">
+        {/* AddTodo에 add함수를 전달  {add : function add(item) {~} */}
+        <AddTodo add={add} />
         {todoItems}
-      </div>
-    </Container>
-  </div>
-);
+      </Container>
+    </div>
+  );
 }
+
 export default App;
-
-//Todo 프로그램 만들기
-//다양한 내용의 할일을 추가하는것
-//임의의 Todo리스트는 각 Todo마다 다른 내용을 갖고있어야한다.
-//이 요구사항을 충족하기 위해 Todo컴포넌트에 title을 매개변수로 넘기자
-
-//useState(), 기능을 하는 함수를 App.js에 만든이유
-//전체 Todo리스트는 App.js에서 관리를 하기 때문에
