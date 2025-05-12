@@ -30,7 +30,19 @@ export function call(api, method, request) {
         //요청 중에 오류가 발생한 경우 실행되는 코드.
         .catch(error => {
             //에러가 발생하면, 이를 console.log로 출력하여 디버깅하거나 문제를 파악할 수 있도록 한다.
-            const m_error = error;
-            return m_error;
+            console.log("에러코드 : " ,error.status);
+             if(error.status === 403){
+            window.location.href="/login";
+            }
+            // const m_error = error;
+            // return m_error;
         });
+}
+
+export function signin(userDTO){
+    return call("/auth/signin", "POST", userDTO)
+        .then(response => {
+            console.log("response : " + response);
+            alert("로그인 토큰: " + response.token);
+        })
 }
