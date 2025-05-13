@@ -2,10 +2,11 @@ import {useState, useEffect} from 'react'
 import logo from './logo.svg';
 import Todo from './Todo';
 import AddTodo from './AddTodo';
-import {Container, List, Paper} from '@mui/material'
+import {AppBar, Container,Grid, List, Paper, Toolbar, Typography} from '@mui/material'
 import axios from 'axios'
-import {call} from './service/ApiService'
-
+import {call,signout} from './service/ApiService'
+import { Button } from '@mui/material';
+import AppRouter from './AppRouter';
 //Container
 //레이아웃의 가로 폭을 제한하고, 중앙 정렬 및 기본 패딩을 자동으로 적용해주는 컴포넌트
 
@@ -19,12 +20,15 @@ function App() {
   //하나의 할 일을 객체로 관리할 것이다.
   //{id, title, done}
   const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true);
 
   //최초 렌더링시 1번만 실행
   useEffect(() => {
     //조회
     call("/todo","GET")
-      .then(result => setItems(result.data))
+      .then(result => {
+        setItems(result.data);
+        setLoading(false)})
   },[]);
 
   const add = (item) => {
@@ -63,13 +67,45 @@ function App() {
         </List>
       </Paper>
 
-  return (
-    <div className="App">
+    //네비게이션 바
+    let navigationBar = (
+      <AppBar position="static">
+        <Toolbar>
+          <Grid justifyContent="space-between" container sx={{ flexGrow: 1 }}>
+
+            <Grid item>
+              <Typography variant='h6'>오늘의 할 일</Typography>
+            </Grid>
+            <Grid item>
+              <Button color='inherit' raised onClick={signout}>
+                로그아웃
+              </Button>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+    )
+
+    //로딩중이 아닐때 랜더링할 부분
+    let todoListPage = (
       <Container maxWidth="md">
         {/* AddTodo에 add함수를 전달  {add : function add(item) {~} */}
         <AddTodo add={add} />
         {todoItems}
       </Container>
+    )
+    //로딩중일 때 렌더링할 부분
+    let loadingPage = <h1>로딩중 ...</h1>
+    let content = loadingPage;
+
+    if(!loading){
+      content = todoListPage;
+    }
+
+  return (
+    <div className="App">
+     {navigationBar}
+      {content}
     </div>
   );
 }

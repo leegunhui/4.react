@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Grid, Typography, TextField, Button } from "@mui/material"; // Material UI 컴포넌트들
+import { Link } from "react-router-dom";
 import { signin } from "./service/ApiService"; // 로그인 API 호출 함수
 
 const Login = () => {
@@ -18,16 +19,16 @@ const Login = () => {
     // 컴포넌트의 렌더링 부분
     return (
         <Container component="main" maxWidth="xs" style={{ marginTop: "8%" }}>
-            <Grid container spacing={2}>
+            <Grid container direction="column" spacing={2}>
                 <Grid item xs={12}>
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" align="center">
                         로그인
                     </Typography>
                 </Grid>
             </Grid>
             {/* 폼을 제출하면 handleSubmit 함수가 실행됨 */}
             <form noValidate onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
+                 <Grid container spacing={2} direction="column">
                     {/* 이메일 입력 필드 */}
                     <Grid item xs={12}>
                         <TextField
@@ -63,6 +64,14 @@ const Login = () => {
                         >
                             로그인
                         </Button>
+                    </Grid>
+                    <Grid item xs={12} style={{ textAlign: 'center' }}>
+                        <Typography variant="body2">
+                            아직 회원이 아니신가요?{' '}
+                            <Link to="/signup" style={{ textDecoration: 'none' }}>
+                                회원가입
+                            </Link>
+                        </Typography>
                     </Grid>
                 </Grid>
             </form>

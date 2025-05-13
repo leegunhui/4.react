@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Button, Grid, TextField} from "@mui/material"
+import React, { useState } from "react";
+import { Button, Grid, TextField } from "@mui/material"
 //style 적용된 컴포넌트를 가져온것
 
 //Button
@@ -31,44 +31,50 @@ import {Button, Grid, TextField} from "@mui/material"
 //type : text , password, email 등 입력
 
 //props로 넘어온 내용을 받아서 준비가 끝남
-const AddTodo = ({add}) =>{
-    const [item,setItem] = useState({title : ""});
+const AddTodo = ({ add }) => {
+    const [item, setItem] = useState({ title: "" });
 
-    const onInputChange = (e) =>{
-        setItem({title:e.target.value});
-        console.log({title:e.target.value});
+    const onInputChange = (e) => {
+        setItem({ title: e.target.value });
+        console.log({ title: e.target.value });
     }
 
-    const onButtonClick = () =>{
-        if(item.title.trim() === ''){
+    const onButtonClick = () => {
+        if (item.title.trim() === '') {
             alert('내용을 입력하세요');
             return; //진행하지않고 함수를 빠져나간다   
         }
         add(item); // add({title:'내용'})
-        setItem({title:""}) // 함수에 전달을 하고나면 비워준다.
+        setItem({ title: "" }) // 함수에 전달을 하고나면 비워준다.
     }
 
     const enterKeyEventHandler = (e) => {
-        if(e.key == "Enter"){
+        if (e.key == "Enter") {
             onButtonClick();
         }
     }
-    return(
-        <Grid container style={{marginTop : 20}}>
-            <Grid xs={11} md={11} item style={{paddingRight : 16}}>
-                <TextField 
-                    placeholder="Add Todo here" 
-                    fullWidth 
-                    value = {item.title}
+    return (
+        <Grid
+            container
+            spacing={2}
+            justifyContent="center" // 중앙 배치
+            alignItems="center" // 중앙 배치
+            style={{ marginTop: 20 }}
+        >
+            <Grid item xs={12}>
+                <TextField
+                    placeholder="Add Todo here"
+                    fullWidth
+                    value={item.title}
                     onChange={onInputChange}
                     onKeyDown={enterKeyEventHandler}
                 />
             </Grid>
             <Grid xs={1} md={1} item>
-                <Button 
-                    fullWidth 
-                    style={{height : '100%'}} 
-                    color="secondary" 
+                <Button
+                    fullWidth
+                    style={{ height: '100%' }}
+                    color="secondary"
                     variant="outlined"
                     onClick={onButtonClick}>
                     +
