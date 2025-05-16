@@ -2,7 +2,7 @@ import { useState,useEffect, useContext } from "react";
 import { BoardContext } from "../context/BoardContext";
 import { useParams,useNavigate } from "react-router-dom";
 import CustomButton from "../component/CustomButton";
-
+import axios from "axios";
 const PostDetail = () => {
 
     const navigate = useNavigate();
@@ -29,24 +29,33 @@ const PostDetail = () => {
         } else {
             console.error('게시글을 찾을 수 없습니다.');
         }
-    },[id]);
+    },[id, boardList]);
 
     const moveToEdit = () => {
         navigate("/edit/"+id);
     }
 
-    //게시글 삭제하기
-    const handleDelete = () => {
-        if(window.confirm("게시글을 삭제하시겠습니까?")){
-            //게시글 한 건 삭제
-            setBoardList((prevList) => prevList.filter((post) => post.id !== parseInt(id)));
-            //삭제되었습니다 alert창 띄우기
-            alert("삭제되었습니다.");
-            //게시판목록으로 이동
-            navigate("/");
+ const handleDelete = async () => {
+    if (window.confirm("게시글을 삭제하시겠습니까?")) {
+        try {
+            // DELETE 요청을 보냄
+            const response = await axios.delete(`http://localhost:10000/api/board/${id}`);
+
+            // 응답 상태 코드가 204일 경우
+            if (response.status === 204) {
+                // 서버에서 삭제가 성공적으로 처리되었으므로 front-end에서도 삭제 처리
+                setBoardList((prevList) => prevList.filter((post) => post.id !== parseInt(id)));
+
+                // 삭제 성공 메시지
+                alert("게시물이 삭제되었습니다.");
+                navigate("/"); // 게시판 목록으로 이동
+            }
+        } catch (error) {
+            console.error("게시물 삭제 실패:", error);
+            alert("게시물 삭제에 실패했습니다.");
         }
     }
-
+};
 
     function moveToBoard(){
         navigate("/")

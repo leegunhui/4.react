@@ -9,34 +9,26 @@ const EditPost = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { boardList, setBoardList } = useContext(BoardContext); // Context 사용
-  const [post, setPost] = useState({title:"",author:"",content:""});
+  const [post, setPost] = useState({ title: "", author: "", content: "" });
 
   const { author, title, content } = post;
 
   const onChange = (event) => {
-    
     const { value, name } = event.target;
     setPost((prevPost) => ({
       ...prevPost,
       [name]: value,
     }));
-    console.log(post)
   };
 
+  // 게시글을 불러오는 함수
   const getPost = async () => {
-    // try {
-    //   const response = await axios.get(
-    //     `http://localhost:8080/board?writingId=${id}`
-    //   );
-    //   setPost(response.data);
-    // } catch (error) {
-    //   console.error("불러오지 못함", error);
-    // }
     const currentPost = boardList.find((item) => item.id === parseInt(id));
     if (currentPost) {
       setPost(currentPost);
     } else {
       console.error("게시글을 찾을 수 없습니다.");
+      alert("게시글을 찾을 수 없습니다.");
     }
   };
 
@@ -44,52 +36,52 @@ const EditPost = () => {
     navigate("/post/" + id);
   };
 
+  // 게시글 수정하는 함수
   const updatePost = async () => {
-    // try {
-    //   const response = await axios.put(
-    //     `http://localhost:8080/board/${id}`,
-    //     post
-    //   );
-    //   console.log(post);
-    //   if (response.status === 200) {
-    //     alert("수정되었습니다.");
-    //     navigate("/post/" + id);
-    //   } else {
-    //     throw new Error("게시물 수정 실패");
-    //   }
-    // } catch (error) {
-    //   console.error("Error updating board:", error);
-    //   alert("게시물 수정에 실패했습니다.");
-    // }
-    setBoardList((prevList) =>
-      prevList.map((item) =>
-        item.id === parseInt(id) ? { ...item, ...post } : item
-      )
-    );
-    alert("게시물이 수정되었습니다.");
-    navigate("/post/" + id); // 수정 후 상세 페이지로 이동
+    try {
+      const response = await axios.put(
+        `http://localhost:10000/api/board/${id}`,
+        post
+      );
+      if (response.status === 200) {
+        // 백엔드 연동 성공 시 프론트에도 반영
+        setBoardList((prevList) =>
+          prevList.map((item) =>
+            item.id === parseInt(id) ? response.data.data[0] : item
+          )
+        );
+        alert("수정되었습니다.");
+        navigate("/post/" + id);
+      } else {
+        throw new Error("게시물 수정 실패");
+      }
+    } catch (error) {
+      console.error("Error updating board:", error);
+      alert("게시물 수정에 실패했습니다.");
+    }
   };
 
-//   useEffect(() => {
-//     getPost();
-//   }, [id,boardList]);
+  useEffect(() => {
+    getPost(); // 게시글 데이터를 불러오는 함수
+  }, [id]);  // boardList와 id가 변경될 때마다 실행됨
 
   return (
     <div>
       <h1>글 수정하기</h1>
       <form>
-        <CustomInput label="제목" value={title} onChange={onChange} />
-        <CustomInput label="작성자" value={author} onChange={onChange} />
+        <CustomInput label="제목" value={title} name="title" onChange={onChange} />
+        <CustomInput label="작성자" value={author}  name ="author" onChange={onChange} />
         <CustomInput
           label="내용"
           multiline
           rows={6}
           value={content}
+          name = "content"
           onChange={onChange}
         />
         <div>
-          <CustomButton label="수정 완료" onClick={updatePost} />
-          <CustomButton label="수정 취소" variant="outlined" color="secondary" onClick={backToPost} />
+          <CustomButton label="수정 완료" onClick={updatePost} /> {/* 수정 완료 버튼 */}
+          <CustomButton label="수정 취소" variant="outlined" color="secondary" onClick={backToPost} /> {/* 수정 취소 버튼 */}
         </div>
       </form>
     </div>

@@ -15,18 +15,26 @@ const BoardList = () => {
 
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     setBoardList(mockData);
-    //     //게시판의 총 페이지 수
-    //     setTotalPages(Math.ceil(mockData.length/postsPerPage));
-    //     //게시글 개수와, 총 페이지 수가 변할 때마다 재렌더링
-    // },[])
+
+     // 게시물 목록 가져오기
+    const getBoardList = async () => {
+        try {
+            const response = await axios.get("http://localhost:10000/api/board/all");
+            const data = response.data.data;
+
+            setBoardList(data);
+
+            // 총 페이지 수 계산
+            setTotalPages(Math.ceil(data.length / postsPerPage));
+        } catch (error) {
+            console.error("게시물 가져오기 실패:", error);
+        }
+    };
+
 
     useEffect(() => {
-        console.log(boardList);
-        setTotalPages(Math.ceil(boardList.length/postsPerPage));
-        setCurrentPage(1);
-    },[postsPerPage,boardList.length])
+        getBoardList();
+    },[postsPerPage])
 
     //페이지 계산
     //현재 페이지의 마지막 게시글 인덱스 + 1을 구한다.
@@ -58,15 +66,16 @@ const BoardList = () => {
                 <button onClick={handleWritePost}>글쓰기</button>
             </div>
             <br />
-            {/* 목업데이터 출력하기 */}
+            {/* 게시물 목록 출력 */}
             <ul className='board-posts'>
-                {currentPosts.map((board) => (
-                    <li key={board.id} className='board-post-item'>
+                {boardList.length > 0 ? (
+                    currentPosts.map((board) => (
+                        <li key={board.id} className='board-post-item'>
                         <Link to={`/post/${board.id}`}>{board.title}</Link>
                         <span>작성자 : {board.author}</span>
                         <span> | 작성 시간 : {board.writingTime}</span>
                     </li>
-                ))}
+                ))): (<p>게시물이 없습니다.</p>)} 
             </ul>
             {/* 한번에 보여줄 게시글 수 조정 */}
             <div className='board-posts-per-page'>
