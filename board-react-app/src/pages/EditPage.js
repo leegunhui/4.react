@@ -70,13 +70,13 @@ const EditPost = () => {
       <h1>글 수정하기</h1>
       <form>
         <CustomInput label="제목" value={title} name="title" onChange={onChange} />
-        <CustomInput label="작성자" value={author}  name ="author" onChange={onChange} />
+        <CustomInput label="작성자" value={author} name="author" onChange={onChange} />
         <CustomInput
           label="내용"
           multiline
           rows={6}
           value={content}
-          name = "content"
+          name="content"
           onChange={onChange}
         />
         <div>

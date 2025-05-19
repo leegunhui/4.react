@@ -1,4 +1,4 @@
-import {useState, useContext} from 'react'
+import { useState, useContext } from 'react'
 import { BoardContext } from '../context/BoardContext'
 import CustomButton from '../component/CustomButton'
 import CustomInput from '../component/CustomInput'
@@ -7,11 +7,11 @@ import axios from 'axios'
 
 const WritePost = () => {
 
-    const {boardList, setBoardList} = useContext(BoardContext);
+    const { boardList, setBoardList } = useContext(BoardContext);
 
     const navigate = useNavigate();
 
-    const [title,setTitle] = useState("");
+    const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [content, setContent] = useState("");
 
@@ -20,7 +20,7 @@ const WritePost = () => {
         const newPost = {
             title,
             author,
-            writingTime : new Date().toISOString(),
+            writingTime: new Date().toISOString(),
             content,
         }
 
@@ -34,29 +34,29 @@ const WritePost = () => {
                 navigate("/");  // 메인 페이지로 리다이렉트
             }
         } catch (error) {
-            setBoardList([...boardList,newPost]);
+            setBoardList([...boardList, newPost]);
             alert('게시물이 등록되었습니다.')
             navigate("/");
         }
-        
+
     }
 
     const backToBoard = () => {
         navigate("/");
     }
 
-    return(
+    return (
         <div>
             <h1>글쓰기 페이지</h1>
             <form>
-                <CustomInput label="제목" value={title} onChange={(e) => setTitle(e.target.value)}/>
-                <CustomInput label="작성자" value={author} onChange={(e) => setAuthor(e.target.value)}/>
-                <CustomInput 
+                <CustomInput label="제목" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <CustomInput label="작성자" value={author} onChange={(e) => setAuthor(e.target.value)} />
+                <CustomInput
                     label="내용"
                     multiline
                     rows={6}
                     value={content}
-                    onChange={(e) => setContent(e.target.value)}    
+                    onChange={(e) => setContent(e.target.value)}
                 />
                 <div>
                     <CustomButton label="저장" onClick={savePost} />

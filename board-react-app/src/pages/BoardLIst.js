@@ -1,4 +1,4 @@
-import {useState,useEffect,useContext} from 'react'
+import { useState, useEffect, useContext } from 'react'
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { BoardContext } from '../context/BoardContext';
@@ -7,7 +7,7 @@ import '../css/BoardList.css'
 
 const BoardList = () => {
 
-    const {boardList, setBoardList} = useContext(BoardContext);
+    const { boardList, setBoardList } = useContext(BoardContext);
 
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [postsPerPage, setPostsPerPage] = useState(3); //한 페이지 보여줄 게시물 개수
@@ -16,7 +16,7 @@ const BoardList = () => {
     const navigate = useNavigate();
 
 
-     // 게시물 목록 가져오기
+    // 게시물 목록 가져오기
     const getBoardList = async () => {
         try {
             const response = await axios.get("http://localhost:10000/api/board/all");
@@ -34,7 +34,7 @@ const BoardList = () => {
 
     useEffect(() => {
         getBoardList();
-    },[postsPerPage])
+    }, [postsPerPage])
 
     //페이지 계산
     //현재 페이지의 마지막 게시글 인덱스 + 1을 구한다.
@@ -44,7 +44,7 @@ const BoardList = () => {
     //ex) 6-3 = 3
     const indexOfFirstPost = indexOfLastPost - postsPerPage
     //indexOfFirstPost부터 indexOfLasPost미만까지 잘라낸 새로운 배열
-    const currentPosts = boardList.slice(indexOfFirstPost,indexOfLastPost)
+    const currentPosts = boardList.slice(indexOfFirstPost, indexOfLastPost)
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -56,10 +56,10 @@ const BoardList = () => {
 
     //글쓰기 페이지로 이동하기
     const handleWritePost = () => {
-      navigate("/write")
+        navigate("/write")
     }
 
-    return(
+    return (
         <div className='board-container'>
             <h1 className="board-title">게시판</h1>
             <div className='board-button'>
@@ -71,11 +71,11 @@ const BoardList = () => {
                 {boardList.length > 0 ? (
                     currentPosts.map((board) => (
                         <li key={board.id} className='board-post-item'>
-                        <Link to={`/post/${board.id}`}>{board.title}</Link>
-                        <span>작성자 : {board.author}</span>
-                        <span> | 작성 시간 : {board.writingTime}</span>
-                    </li>
-                ))): (<p>게시물이 없습니다.</p>)} 
+                            <Link to={`/post/${board.id}`}>{board.title}</Link>
+                            <span>작성자 : {board.author}</span>
+                            <span> | 작성 시간 : {board.writingTime}</span>
+                        </li>
+                    ))) : (<p>게시물이 없습니다.</p>)}
             </ul>
             {/* 한번에 보여줄 게시글 수 조정 */}
             <div className='board-posts-per-page'>
@@ -96,11 +96,11 @@ const BoardList = () => {
                     4. map((number) => ...) 각 number에 대해 버튼을 생성한다.*/}
                 {[...Array(totalPages).keys()].map((number) => (
                     <button
-                        key={number+1}
-                        className={currentPage === number+1 ? "selected" : ""}
-                        onClick={() => paginate(number+1)}
+                        key={number + 1}
+                        className={currentPage === number + 1 ? "selected" : ""}
+                        onClick={() => paginate(number + 1)}
                     >
-                        {number+1}
+                        {number + 1}
                     </button>
                 ))}
             </div>
