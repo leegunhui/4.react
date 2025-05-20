@@ -17,6 +17,12 @@ function MultiButtons() {
       case 'contact':
         navigate('/contact'); // contact 페이지로 이동
         break;
+      case 'movie' :
+        navigate("/movie");
+        break;
+      case 'map' :
+        navigate("/map");
+        break;
       default:
         console.log('알 수 없는 버튼 클릭');
     }
@@ -32,6 +38,12 @@ function MultiButtons() {
       </button>
       <button id="contact" onClick={handleButtonClick}>
         Contact
+      </button>
+      <button id="movie" onClick={handleButtonClick}>
+        영화 api
+      </button>
+      <button id="map" onClick={handleButtonClick}>
+        카카오 지도 api
       </button>
     </div>
   );
